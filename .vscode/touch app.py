@@ -1,36 +1,28 @@
 from flask import Flask
 import os
-import datetime
 import subprocess
+from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 
 @app.route('/htop')
 def htop():
-    name = "Nagarjun.P"
-    username = os.getlogin()
-    server_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S IST')
-
-    top_output = subprocess.check_output("top -b -n 1 | head -10", shell=True).decode('utf-8')
-
+    
+    full_name = "Nagarjun"
+    system_username = os.getenv("USER") or os.getenv("USERNAME") or "codespace"
+    ist = pytz.timezone('Asia/Kolkata')
+    server_time = datetime.now(ist).strftime('%Y-%m-%d %H:%M:%S.%f')
+    top_output = subprocess.getoutput("top -b -n 1")
     return f"""
-    <html>
-        <head>
-            <title>HTOP Endpoint</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }}
-                pre {{ background-color: #eee; padding: 10px; border-radius: 5px; overflow-x: auto; }}
-            </style>
-        </head>
-        <body>
-            <h1>HTOP Endpoint</h1>
-            <p><strong>Name:</strong> {name}</p>
-            <p><strong>Username:</strong> {username}</p>
-            <p><strong>Server Time:</strong> {server_time}</p>
-            <h2>Top Output:</h2>
-            <pre>{top_output}</pre>
-        </body>
-    </html>
+    <pre>
+    Name: {full_name}
+    User: {system_username}
+    Server Time (IST): {server_time}
+
+    TOP output:
+    {top_output}
+    </pre>
     """
 
 if __name__ == '__main__':
