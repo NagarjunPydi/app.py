@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/htop')
 def htop():
-    name = "Your Full Name"
+    name = "Nagarjun.P"
     username = os.getlogin()
     server_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S IST')
 
